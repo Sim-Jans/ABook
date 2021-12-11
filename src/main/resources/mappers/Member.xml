@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.account.ABook.dao.MemberDao">
+    <select id="examineMember" resultType="com.account.ABook.model.Member">
+        SELECT
+            member_npm as memberNpm,
+            id,
+            pwd,
+            hiredate,
+            status
+        FROM
+            member
+        WHERE
+            id = '${id}'
+        and
+            pwd = '${pwd}'
+
+    </select>
+
+
+
+
+
+
+
+
+
+
+</mapper>

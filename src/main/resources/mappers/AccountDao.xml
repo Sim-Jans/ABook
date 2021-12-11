@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.account.ABook.dao.AccountDao">
+
+    <insert id="insertAccountBook" parameterType="int" keyProperty="columnSeq"  useGeneratedKeys="true">
+        <selectKey keyProperty="accountno" resultType="int" order="BEFORE">
+            select accountSeq.NEXTVAL  from dual
+        </selectKey>
+
+        INSERT INTO account_book (
+        accountno,
+        status,
+        paydate,
+        kategorieno,
+        name,
+        sub,
+        price,
+        member_npm
+        ) VALUES (
+        '${accountno }',
+        '${status}',
+        sysdate,
+        '${mainMenu}',
+        '${name}',
+        '${sub}',
+        '${price}',
+        '${memberNpm}'
+        )
+
+    </insert>
+
+    <select id="getAccountList"  resultType="com.account.ABook.model.AccountBook">
+        SELECT
+            A.ACCOUNTNO AS accountno,
+            A.STATUS AS status,
+            TO_DATE(A.PAYDATE, 'YYYY-MM-DD') AS paydate,
+            B.MAINMENU AS mainMenu,
+            B.SUBMENU AS subMenu,
+            A.NAME AS name,
+            A.SUB AS sub,
+            A.PRICE AS price,
+            A.MEMBER_NPM AS memberNpm
+        FROM
+            ACCOUNT_BOOK A,
+            KATEGORIE B
+        WHERE
+            A.KATEGORIENO = B.KATEGORIENO
+          AND
+            A.MEMBER_NPM = '${memberNpm}'
+    </select>
+
+    <!-- get 카테고리 -->
+    <select id="getKategorie" resultType="com.account.ABook.model.Kategorie">
+        SELECT
+            B.KATEGORIENO,
+            A.MEMBER_NPM,
+            A.MAINMENU,
+            B.MAINMENU AS submenu,
+            A.TODATE
+        FROM
+            KATEGORIE A RIGHT OUTER JOIN KATEGORIE B
+        ON
+            A.KATEGORIENO = B.SUBMENU
+        WHERE
+            A.MEMBER_NPM = '${memberNpm}'
+
+    </select>
+
+
+
+
+
+
+</mapper>
