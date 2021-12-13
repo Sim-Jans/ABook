@@ -10,5 +10,6 @@ public class Kategorie {
     String mainmenu;        //상위
     String submenu;         //상세정보
     String todate;          //날짜
+    String icon;        //아이콘
 
 }

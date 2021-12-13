@@ -70,5 +70,14 @@ public class MemberController {
         }
     }
 
+    //sessoin 삭제
+    @RequestMapping(value="/deleteMember", method = RequestMethod.DELETE)
+    public ResponseEntity deleteMember(HttpServletRequest request, HttpServletResponse response){
 
+        HttpSession session = request.getSession();
+        session.invalidate();
+        session.removeAttribute("member");
+
+        return new ResponseEntity("ok", HttpStatus.OK);
+    }
 }

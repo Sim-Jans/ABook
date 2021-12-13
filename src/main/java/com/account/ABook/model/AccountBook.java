@@ -13,4 +13,5 @@ public class AccountBook {
     String sub;         //설명
     String price;       //가격
     int memberNpm;      //멤버
+    String icon;        //아이콘
 }

@@ -42,10 +42,23 @@
             A.NAME AS name,
             A.SUB AS sub,
             A.PRICE AS price,
-            A.MEMBER_NPM AS memberNpm
+            A.MEMBER_NPM AS memberNpm,
+            B.ICON AS icon
         FROM
             ACCOUNT_BOOK A,
-            KATEGORIE B
+            (SELECT
+                 B.KATEGORIENO,
+                 A.MEMBER_NPM,
+                 A.MAINMENU,
+                 B.MAINMENU AS submenu,
+                 A.TODATE,
+                 A.ICON
+             FROM
+                 KATEGORIE A RIGHT OUTER JOIN KATEGORIE B
+                                              ON
+                                                  A.KATEGORIENO = B.SUBMENU
+             WHERE
+                 A.MEMBER_NPM = '${memberNpm}') B
         WHERE
             A.KATEGORIENO = B.KATEGORIENO
           AND
@@ -54,12 +67,25 @@
 
     <!-- get 카테고리 -->
     <select id="getKategorie" resultType="com.account.ABook.model.Kategorie">
+        select
+            KATEGORIENO,
+            MEMBER_NPM,
+            MAINMENU,
+            MAINMENU AS submenu,
+            TODATE,
+            ICON
+        from KATEGORIE
+        where SUBMENU is null
+
+        union
+
         SELECT
             B.KATEGORIENO,
             A.MEMBER_NPM,
             A.MAINMENU,
             B.MAINMENU AS submenu,
-            A.TODATE
+            A.TODATE,
+            B.ICON as icon
         FROM
             KATEGORIE A RIGHT OUTER JOIN KATEGORIE B
         ON
@@ -69,6 +95,25 @@
 
     </select>
 
+    <!-- insert 카테고리 -->
+    <insert id="insertKategorie" parameterType="int" keyProperty="KATEGORIESEQ"  useGeneratedKeys="true">
+        <selectKey keyProperty="kategorieno" resultType="int" order="BEFORE">
+            select KATEGORIESEQ.NEXTVAL  from dual
+        </selectKey>
+        INSERT INTO KATEGORIE (
+        KATEGORIENO,
+        MEMBER_NPM,
+        MAINMENU,
+        SUBMENU,
+        TODATE
+        ) VALUES (
+        '${kategorieno}',
+        '${kategorieno}',
+        '${kategorieno}',
+        '${kategorieno}',
+        '${kategorieno}'
+        );
+    </insert>
 
 
 
