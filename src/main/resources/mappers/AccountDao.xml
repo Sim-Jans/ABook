@@ -96,23 +96,28 @@
     </select>
 
     <!-- insert 카테고리 -->
-    <insert id="insertKategorie" parameterType="int" keyProperty="KATEGORIESEQ"  useGeneratedKeys="true">
+    <insert id="insurtKategorie" parameterType="int"  useGeneratedKeys="true">
         <selectKey keyProperty="kategorieno" resultType="int" order="BEFORE">
-            select KATEGORIESEQ.NEXTVAL  from dual
+            select kategorieseq.NEXTVAL  from dual
         </selectKey>
         INSERT INTO KATEGORIE (
         KATEGORIENO,
         MEMBER_NPM,
         MAINMENU,
         SUBMENU,
-        TODATE
+        TODATE,
+        ICON
         ) VALUES (
         '${kategorieno}',
-        '${kategorieno}',
-        '${kategorieno}',
-        '${kategorieno}',
-        '${kategorieno}'
-        );
+        '${memberNpm}',
+        '${mainmenu}',
+        <if test="submenu == null">
+            null,
+        </if>
+
+        SYSDATE,
+        '${icon}'
+        )
     </insert>
 
 

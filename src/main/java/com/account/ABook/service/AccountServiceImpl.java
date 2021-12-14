@@ -32,4 +32,9 @@ public class AccountServiceImpl implements AccountService{
         return accountDao.getKategorie(member);
     }
 
+    @Override
+    public int insurtKategorie(Kategorie kategorie) throws Exception{
+        return accountDao.insurtKategorie(kategorie);
+    }
+
 }

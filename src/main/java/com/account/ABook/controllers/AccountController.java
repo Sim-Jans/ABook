@@ -7,6 +7,7 @@ import com.account.ABook.service.AccountServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -116,7 +117,22 @@ public class AccountController {
     }
 
 
+    @RequestMapping(value="/insurtKategorie", method = RequestMethod.POST)
+    public ResponseEntity insurtKategorie(HttpServletRequest request, @RequestBody Kategorie kategorie) throws Exception {
 
+        Member member = getMember(request);
+        Optional<Member> ifMember= Optional.ofNullable(member);
+
+        if(ifMember.isPresent()){
+            kategorie.setMemberNpm(member.getMemberNpm());
+
+            if(accountService.insurtKategorie(kategorie) > 0){
+                return new ResponseEntity("ok", HttpStatus.OK);
+            }
+        }
+        System.out.println(kategorie);
+        return new ResponseEntity("not", HttpStatus.BAD_REQUEST);
+    }
 
 
 

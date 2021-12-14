@@ -13,4 +13,6 @@ public interface AccountService {
     int insertAccountBook(AccountBook accountBook) throws Exception;
 
     List<Kategorie> getKategorie(Member member) throws Exception;
+
+    int insurtKategorie(Kategorie kategorie) throws Exception;
 }

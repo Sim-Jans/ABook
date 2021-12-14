@@ -17,4 +17,6 @@ public interface AccountDao {
     public List<AccountBook> getAccountList (Member member) throws Exception;
 
     public List<Kategorie> getKategorie(Member member) throws Exception;
+
+    public int insurtKategorie(Kategorie kategorie);
 }
