@@ -18,16 +18,23 @@
         name,
         sub,
         price,
-        member_npm
+        member_npm,
+        payno
         ) VALUES (
         '${accountno }',
         '${status}',
+        <if test="paydate != null">
+        '${paydate}',
+        </if>
+        <if test="paydate == null" >
         sysdate,
+        </if>
         '${mainMenu}',
         '${name}',
         '${sub}',
         '${price}',
-        '${memberNpm}'
+        '${memberNpm}',
+        '${pay}'
         )
 
     </insert>
@@ -43,7 +50,8 @@
             A.SUB AS sub,
             A.PRICE AS price,
             A.MEMBER_NPM AS memberNpm,
-            B.ICON AS icon
+            B.ICON AS icon,
+            C.PAY AS pay
         FROM
             ACCOUNT_BOOK A,
             (SELECT
@@ -58,11 +66,46 @@
                                               ON
                                                   A.KATEGORIENO = B.SUBMENU
              WHERE
-                 A.MEMBER_NPM = '${memberNpm}') B
+                 A.MEMBER_NPM = '${member.memberNpm}') B,
+            PAY_WAY C
         WHERE
             A.KATEGORIENO = B.KATEGORIENO
-          AND
-            A.MEMBER_NPM = '${memberNpm}'
+        AND
+            A.PAYNO = C.PAYNO
+        AND
+            A.MEMBER_NPM = '${member.memberNpm}'
+        <if test="search.beforeDate != null and search.afterDate == null">
+            <![CDATA[
+        AND
+            TO_DATE(A.PAYDATE, 'YYYY-MM-DD') >= TO_DATE('${search.beforeDate}', 'YYYY-MM-DD')
+            ]]>
+        </if>
+        <if test="search.afterDate != null and search.beforeDate == null">
+            <![CDATA[
+        AND
+            TO_DATE(A.PAYDATE, 'YYYY-MM-DD') <= TO_DATE('${search.afterDate}', 'YYYY-MM-DD')
+            ]]>
+        </if>
+        <if test="search.beforeDate != null and search.afterDate != null">
+            <![CDATA[
+        AND
+            TO_DATE(A.PAYDATE, 'YYYY-MM-DD') >= TO_DATE('${search.beforeDate}', 'YYYY-MM-DD')
+        AND
+            TO_DATE(A.PAYDATE, 'YYYY-MM-DD') <= TO_DATE('${search.afterDate}', 'YYYY-MM-DD')
+            ]]>
+        </if>
+
+        <if test="search.toDay != null and search.week != null">
+            <![CDATA[
+        AND
+            TO_DATE(A.PAYDATE, 'YYYY-MM-DD') >= TO_DATE('${search.week}', 'YYYY-MM-DD')
+        AND
+            TO_DATE(A.PAYDATE, 'YYYY-MM-DD') <= TO_DATE('${search.toDay}', 'YYYY-MM-DD')
+            ]]>
+        </if>
+
+        ORDER BY paydate DESC
+
     </select>
 
     <!-- get 카테고리 -->
@@ -84,13 +127,13 @@
             A.MEMBER_NPM,
             A.MAINMENU,
             B.MAINMENU AS submenu,
-            A.TODATE,
+            B.TODATE,
             B.ICON as icon
         FROM
-            KATEGORIE A RIGHT OUTER JOIN KATEGORIE B
-        ON
-            A.KATEGORIENO = B.SUBMENU
+            KATEGORIE A , KATEGORIE B
         WHERE
+            A.KATEGORIENO = B.SUBMENU
+        AND
             A.MEMBER_NPM = '${memberNpm}'
 
     </select>
@@ -114,14 +157,26 @@
         <if test="submenu == null">
             null,
         </if>
+        <if test="submenu != null">
+            '${submenu}',
+        </if>
 
         SYSDATE,
         '${icon}'
         )
     </insert>
 
+<!-- 지불 방법 -->
+<select id="getPayWay" resultType="Map">
+    SELECT
+        PAYNO,
+        PAY
+    FROM
+        PAY_WAY
+    WHERE
+        MEMBER_NPM = '${memberNpm}'
 
-
+</select>
 
 
 </mapper>

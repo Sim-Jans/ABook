@@ -14,4 +14,9 @@ public class AccountBook {
     String price;       //가격
     int memberNpm;      //멤버
     String icon;        //아이콘
+    String pay;
+
+    String year;
+    String month;
+    String day;
 }
